@@ -28,3 +28,4 @@ env/
 venv/
 output/
 Pipfile.lock
+.env

@@ -1,22 +1,28 @@
-version: '3'
 services:
   broker-rabbitmq:
     image: "rabbitmq:3.7.14-management"
     environment:
       - RABBITMQ_DEFAULT_USER=rabbit_user
       - RABBITMQ_DEFAULT_PASS=rabbit_password
-  db-postgres:
-    image: "postgres:11.2"
+  db-mysql:
+    image: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
     environment:
-      - POSTGRES_USER=db_user
-      - POSTGRES_PASSWORD=db_password
+      MYSQL_RANDOM_ROOT_PASSWORD: true
+      MYSQL_PASSWORD: "${USER_DB_PASSWORD}"
+      MYSQL_USER: myuser
+      MYSQL_DATABASE: mydb
   migration:
     build: .
     environment:
       - APP_ENV=${APP_ENV}
     command: flask db upgrade
     depends_on:
-      - db-postgres
+      - db-mysql
   api:
     build: .
     ports:
@@ -25,7 +31,7 @@ services:
       - APP_ENV=${APP_ENV}
     depends_on:
       - broker-rabbitmq
-      - db-postgres
+      - db-mysql
       - migration
   api-worker:
     build: .
@@ -34,7 +40,7 @@ services:
       - APP_ENV=${APP_ENV}
     depends_on:
       - broker-rabbitmq
-      - db-postgres
+      - db-mysql
       - migration
   api-beat:
     build: .
@@ -43,5 +49,8 @@ services:
       - APP_ENV=${APP_ENV}
     depends_on:
       - broker-rabbitmq
-      - db-postgres
+      - db-mysql
       - migration
+
+volumes:
+    db_data:

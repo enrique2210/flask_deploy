@@ -6,12 +6,12 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-flask = "2.2.2"
+flask = "*"
 flask-restful = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 celery = "*"
-werkzeug="2.2.2"
+werkzeug="*"
 psycopg2="*"
 
 [requires]
