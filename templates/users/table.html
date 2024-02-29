@@ -1,0 +1,244 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Lista de Usuarios {% endblock %}
+<!-- Element injected in the BODY element -->
+{% block body_class %} {% endblock body_class %}
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet"
+          href="/static/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet"
+          href="/static/assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet"
+          href="/static/assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="/static/assets/plugins/toastr/toastr.min.css">
+
+{% endblock stylesheets %}
+
+{% block content %}
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1><i class="fas  fa-user nav-icon"></i> Usuarios</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="/users/form" class="btn btn-default float-right">
+                            + Agregar
+                        </a>
+                    </div>
+
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Filtros</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <form id="filter" method="post">
+                                <div class="card-body row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="credit_value">Estado</label>
+                                            <select name="status" id="status"
+                                                    class="form-control select2"
+                                                    style="width: 100%;" required>
+                                                <option selected="selected" value="1">
+                                                    Activo
+                                                </option>
+                                                <option selected="selected" value="0">
+                                                    Inactivo
+                                                </option>
+                                                <option selected="selected" value="-1">
+                                                    Selecciona una opcion
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 offset-md-9">
+                                        <button type="button"
+                                                class="btn btn-primary float-right"
+                                                data-toggle="modal"
+                                                onclick="get_users()"
+                                                data-target="#modal-default">
+                                            Buscar
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>        <!-- /.card-body -->
+                        </div>
+
+                        <!-- /.card -->
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Listado de usuarios
+                                    registrados en el sistema</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table id="table_list"
+                                       class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Rol</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot>
+                                        <th>Nombre</th>
+                                        <th>Rol</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+    </div>
+
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+    <!-- jQuery -->
+    <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables -->
+    <script src="/static/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+{#    <script src="/static/assets/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>#}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+{#    <script src="/static/assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>#}
+{#    <script src="/static/assets/plugins/datatables-buttons/js/buttons.html5.min.js"></script>#}
+{#    <script src="/static/assets/plugins/datatables-buttons/js/buttons.print.min.js"></script>#}
+    <script src="/static/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/static/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/static/assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/static/assets/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="/static/assets/js/demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Toastr -->
+    <script src="/static/assets/plugins/toastr/toastr.min.js"></script>
+    <!-- bs-custom-file-input -->
+    <script src="/static/assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <!-- page script -->
+    <script>
+        $(function () {
+
+            get_users()
+
+        });
+
+        ROLES = {
+            1:"REGIONAL",
+            2:"ESTATAL",
+            3:"INSTITUCION",
+        }
+
+        function update_table(data) {
+            elements = []
+            $.each(data, function (i, element_data) {
+                element = []
+                element.push(element_data.username)
+                element.push(ROLES[element_data.role])
+                element.push(element_data.status == 0 ? "INACTIVO": "ACTIVO")
+
+                element.push('<a type="button" class="btn btn-sm btn-outline-primary" href="/users/form/' + element_data.id + '" title="Editar">' +
+                    '<i class="fas fa-edit"></i>' +
+                    '</a>' +
+                    (element_data.status ? ' <a type="button" class="btn btn-sm btn-outline-danger" onclick="refresh_user_status(\'' + element_data.id + '\', 0)" title="Desactivar">' +
+                    '<i class="fas fa-arrow-down"></i>' +
+                    '</a>' :
+                    ' <a type="button" class="btn btn-sm btn-outline-success" onclick="refresh_user_status(\'' + element_data.id + '\', 1)" title="Activar">' +
+                    '<i class="fas fa-arrow-up"></i>' +
+                    '</a>')
+                )
+                elements.push(element)
+            })
+            $('#table_list').DataTable().clear();
+            $('#table_list').DataTable().destroy();
+            $('#table_list').DataTable({
+                dom: 'lBfrtip',
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
+                },
+                data: elements,
+                columns: [
+                    {title: "Nombre"},
+                    {title: "Rol"},
+                    {title: "Estado"},
+                    {title: "Acciones"}
+                ]
+            });
+        }
+
+        function refresh_user_status(user_id, new_status) {
+            axios({
+                method: 'get',
+                url: '/api/users/activate',
+                params: {
+                    user_id:user_id,
+                    new_status:new_status
+                }
+            }).then(function (response) {
+                toastr.success(response.data)
+                get_users()
+            }).catch(function (error) {
+                toastr.error(error.response.data)
+            });
+        }
+
+
+        function get_users() {
+            var status = $('#status').val()
+
+            var data = {}
+
+            if (status != -1)
+                data["status"]=status
+
+            $.getJSON('/api/users',data,
+                function (data) {
+                    update_table(data)
+                }
+            );
+        }
+
+    </script>
+
+{% endblock javascripts %}

@@ -1,0 +1,52 @@
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-link">
+      <img src="/static/assets/img/logos/logo_sm_white.png" alt="AdminLTE Logo" class="brand-image " style="opacity: .8;">
+      <span class="brand-text font-weight-light">NOMBRE EMPRESA</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+
+        <div class="info text-white">
+            Usuario: {{ current_user.username }}
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            {% if current_user.role == 0 %}
+            <a href="/users" class="nav-link {% if 'users' in segment %} active {% endif %}">
+              <i class="nav-icon fas fa-user"></i>
+              <p> Usuarios</p>
+            </a>
+            <a href="/system_config/form" class="nav-link {% if 'system_config' in segment %} active {% endif %}">
+              <i class="nav-icon fas fa-cog"></i>
+              <p> Config. Sistema</p>
+            </a>
+            {% endif %}
+            <a href="{{ url_for('authentication.logout') }}" class="nav-link">
+              <i class="nav-icon fas fa-arrow-alt-circle-left"></i>
+              <p> Cerrar Sesión</p>
+            </a>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+
+  </aside>
+    <div class="modal fade" id="bank_modal" tabindex="-1" role="dialog" aria-labelledby="bank_modal"
+         aria-hidden="true">
+    </div>
+  <script>
+
+      var status = "{{ current_user.status }}"
+      if (status != "1")
+        window.location.href = "/page-401"
+
+  </script>
