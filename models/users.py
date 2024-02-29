@@ -44,3 +44,8 @@ class Users(db.Model, UserMixin):
     def find_by_id(cls, user_id):
         user = Users.query.filter_by(id=user_id).first()
         return user
+
+    def save_to_db(self) -> None:
+        db.session.add(self)
+        db.session.commit()
+        
