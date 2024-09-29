@@ -1,6 +1,7 @@
 import logging
 import os
 
+import wtforms_json
 from flask_login import LoginManager
 
 import config
@@ -12,6 +13,7 @@ from models.users import Users
 from routes.home import blueprint as home_bp
 from routes.authentication import blueprint as authentication_bp
 from routes.users import blueprint as user_bp
+from api.users import blueprint as user_api_bp
 from models import db
 from flask_migrate import Migrate
 migrate = Migrate()
@@ -35,10 +37,11 @@ def create_app():
     migrate.init_app(app, db)
     # initialize Login Manager
     login_manager.init_app(app)
-
+    wtforms_json.init()
     app.register_blueprint(home_bp)
     app.register_blueprint(authentication_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(user_api_bp)
 
     return app
 

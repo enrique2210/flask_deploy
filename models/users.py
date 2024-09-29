@@ -11,9 +11,9 @@ from models.utils import hash_pass
 
 class Users(db.Model, UserMixin):
     id = Column(String(36), primary_key=True, default=str(uuid.uuid4()), unique=True)
-    username = Column(String(100), index=True, unique=True)
+    username: str = Column(String(100), index=True, unique=True)
     password = db.Column(db.LargeBinary)
-    role = Column(Enum(Role))
+    role: Enum = Column(Enum(Role), default=Role.CLIENT)
     status = Column(String(2), default=1, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -26,7 +26,6 @@ class Users(db.Model, UserMixin):
             if hasattr(value, '__iter__') and not isinstance(value, str):
                 # the ,= unpack of a singleton fails PEP8 (travis flake8 test)
                 value = value[0]
-
             if property == 'password':
                 value = hash_pass(value)  # we need bytes here (not plain str)
 

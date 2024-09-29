@@ -21,6 +21,7 @@ flask-login = "*"
 cryptography = "*"
 flask-seeder = "*"
 wtforms-json = "*"
+pydantic = "*"
 
 [requires]
 python_version = "3.7"
